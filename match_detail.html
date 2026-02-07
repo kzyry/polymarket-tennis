@@ -164,23 +164,8 @@
                 return;
             }
 
-            try {
-                // Try API endpoint first
-                const response = await fetch(`http://localhost:8001/api/match/${marketId}`);
-
-                if (response.ok) {
-                    const matchData = await response.json();
-                    if (matchData.error) {
-                        throw new Error(matchData.error);
-                    }
-                    renderMatch(matchData.match, matchData.price_history);
-                    return;
-                }
-            } catch (error) {
-                console.warn('API not available, using fallback:', error);
-            }
-
-            // Fallback: load from matches_data.json
+            // On GitHub Pages, we don't have API server, so just use matches_data.json
+            // For local development with API server, change this URL
             try {
                 const allData = await fetch('matches_data.json');
                 const data = await allData.json();
