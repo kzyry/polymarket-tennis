@@ -238,7 +238,8 @@
             document.getElementById('meta').innerHTML = `
                 <strong>Winner: ${winnerName}</strong><br>
                 Volume: $${volume.toLocaleString('en-US', {maximumFractionDigits: 0})} |
-                Game Start: ${gameDate}
+                Game Start: ${gameDate} |
+                <a href="${match.url || `https://polymarket.com/event/${match.slug}`}" target="_blank" style="color: #0066cc; text-decoration: none;">View on Polymarket ↗</a>
             `;
 
             if (!priceHistory) {
