@@ -164,33 +164,35 @@
                 return;
             }
 
-            // Try to load detailed data from data/<market_id>.json
+            // Load from consolidated tennis markets data
             try {
-                const response = await fetch(`data/${marketId}.json`);
+                const response = await fetch('data/tennis_markets.json');
+                const data = await response.json();
 
-                if (response.ok) {
-                    const matchData = await response.json();
-                    renderMatch(matchData.match, matchData.price_history);
-                    return;
-                }
-            } catch (error) {
-                console.warn('Detailed data not available, using matches_data.json:', error);
-            }
+                const market = data.markets.find(m => m.id === marketId);
 
-            // Fallback: load from matches_data.json (no price history)
-            try {
-                const allData = await fetch('matches_data.json');
-                const data = await allData.json();
-                const match = data.matches.find(m => m.market_id === marketId);
+                if (market) {
+                    // Transform market data to match format
+                    const match = {
+                        market_id: market.id,
+                        question: market.question,
+                        slug: market.slug,
+                        outcomes: JSON.parse(market.outcomes),
+                        volume: parseFloat(market.volume) || 0,
+                        clobTokenIds: market.clobTokenIds,
+                        startTs: market.startTs,
+                        endTs: market.endTs,
+                        gameStartTime: new Date(market.startTs * 1000).toISOString(),
+                        url: `https://polymarket.com/event/${market.slug}`
+                    };
 
-                if (match) {
-                    renderMatch(match, null);
+                    renderMatch(match, market.priceHistory);
                 } else {
                     document.getElementById('content').innerHTML =
                         '<div class="error">Матч не найден</div>';
                 }
-            } catch (fallbackError) {
-                console.error('Fallback failed:', fallbackError);
+            } catch (error) {
+                console.error('Error loading data:', error);
                 document.getElementById('content').innerHTML =
                     '<div class="error">Ошибка загрузки данных</div>';
             }
