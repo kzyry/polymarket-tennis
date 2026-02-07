@@ -228,13 +228,9 @@
         }
 
         function renderTable(title, history) {
+            // Don't show section if no data
             if (!history || history.length === 0) {
-                return `
-                    <div class="section">
-                        <h2>${title}</h2>
-                        <p style="color: #666;">Нет данных</p>
-                    </div>
-                `;
+                return '';
             }
 
             let prevPrice = null;
