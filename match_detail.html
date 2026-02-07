@@ -164,8 +164,20 @@
                 return;
             }
 
-            // On GitHub Pages, we don't have API server, so just use matches_data.json
-            // For local development with API server, change this URL
+            // Try to load detailed data from data/<market_id>.json
+            try {
+                const response = await fetch(`data/${marketId}.json`);
+
+                if (response.ok) {
+                    const matchData = await response.json();
+                    renderMatch(matchData.match, matchData.price_history);
+                    return;
+                }
+            } catch (error) {
+                console.warn('Detailed data not available, using matches_data.json:', error);
+            }
+
+            // Fallback: load from matches_data.json (no price history)
             try {
                 const allData = await fetch('matches_data.json');
                 const data = await allData.json();
