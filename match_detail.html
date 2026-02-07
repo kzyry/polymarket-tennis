@@ -173,20 +173,30 @@
 
                 if (market) {
                     // Transform market data to match format
+                    const outcomes = JSON.parse(market.outcomes);
                     const match = {
                         market_id: market.id,
+                        title: market.question,
                         question: market.question,
                         slug: market.slug,
-                        outcomes: JSON.parse(market.outcomes),
+                        outcomes: outcomes,
+                        players: outcomes, // Outcomes are player names
                         volume: parseFloat(market.volume) || 0,
                         clobTokenIds: market.clobTokenIds,
                         startTs: market.startTs,
                         endTs: market.endTs,
+                        date: new Date(market.startTs * 1000).toISOString(),
                         gameStartTime: new Date(market.startTs * 1000).toISOString(),
                         url: `https://polymarket.com/event/${market.slug}`
                     };
 
-                    renderMatch(match, market.priceHistory);
+                    // Transform price history to expected format (all data goes to ingame)
+                    const transformedHistory = {
+                        pregame: [],
+                        ingame: market.priceHistory || []
+                    };
+
+                    renderMatch(match, transformedHistory);
                 } else {
                     document.getElementById('content').innerHTML =
                         '<div class="error">Матч не найден</div>';
