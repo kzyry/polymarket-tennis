@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Details - Tennis Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', monospace;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background: #333;
+            border-color: #555;
+        }
+
+        .back-button::before {
+            content: '← ';
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .meta {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 14px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+        }
+
+        th {
+            text-align: left;
+            padding: 10px 15px;
+            background: #2a2a2a;
+            color: #999;
+            font-weight: 500;
+            border-bottom: 1px solid #333;
+        }
+
+        td {
+            padding: 8px 15px;
+            border-bottom: 1px solid #252525;
+        }
+
+        tr:hover {
+            background: #222;
+        }
+
+        .price {
+            font-weight: 600;
+        }
+
+        .odds {
+            color: #888;
+        }
+
+        .change-positive {
+            color: #0f0;
+        }
+
+        .change-negative {
+            color: #f00;
+        }
+
+        .change-neutral {
+            color: #888;
+        }
+
+        .timestamp {
+            color: #777;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #f00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="#" class="back-button" id="backButton">Назад</a>
+        
+        <h1 id="title">Loading...</h1>
+        <div class="meta" id="meta"></div>
+
+        <div id="content">
+            <div class="loading">Загрузка данных матча...</div>
+        </div>
+    </div>
+
+    <script>
+        // Get market ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const marketId = urlParams.get('id');
+
+        // Back button handler
+        document.getElementById('backButton').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'index.html';
+        });
+
+        async function loadMatchData() {
+            if (!marketId) {
+                document.getElementById('content').innerHTML =
+                    '<div class="error">Ошибка: ID матча не указан</div>';
+                return;
+            }
+
+            try {
+                // Try API endpoint first
+                const response = await fetch(`http://localhost:8001/api/match/${marketId}`);
+
+                if (response.ok) {
+                    const matchData = await response.json();
+                    if (matchData.error) {
+                        throw new Error(matchData.error);
+                    }
+                    renderMatch(matchData.match, matchData.price_history);
+                    return;
+                }
+            } catch (error) {
+                console.warn('API not available, using fallback:', error);
+            }
+
+            // Fallback: load from matches_data.json
+            try {
+                const allData = await fetch('matches_data.json');
+                const data = await allData.json();
+                const match = data.matches.find(m => m.market_id === marketId);
+
+                if (match) {
+                    renderMatch(match, null);
+                } else {
+                    document.getElementById('content').innerHTML =
+                        '<div class="error">Матч не найден</div>';
+                }
+            } catch (fallbackError) {
+                console.error('Fallback failed:', fallbackError);
+                document.getElementById('content').innerHTML =
+                    '<div class="error">Ошибка загрузки данных</div>';
+            }
+        }
+
+        function renderMatch(match, priceHistory) {
+            document.getElementById('title').textContent = match.title;
+            
+            const volume = match.volume || 0;
+            const gameDate = match.date ? new Date(match.date).toLocaleString('ru-RU') : 'N/A';
+            
+            document.getElementById('meta').innerHTML = `
+                Volume: $${volume.toLocaleString('en-US', {maximumFractionDigits: 0})} |
+                Game Start: ${gameDate}
+            `;
+
+            if (!priceHistory) {
+                document.getElementById('content').innerHTML = `
+                    <div class="section">
+                        <p style="color: #999;">Данные о ценах пока собираются...</p>
+                        <p style="color: #666; margin-top: 10px;">
+                            Market ID: ${match.market_id}<br>
+                            Status: ${match.status || 'pending'}
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render price history tables
+            const pregameHtml = renderTable('Pre-game (Hourly)', priceHistory.pregame || []);
+            const ingameHtml = renderTable('In-game (Every 10 min)', priceHistory.ingame || []);
+
+            document.getElementById('content').innerHTML = pregameHtml + ingameHtml;
+        }
+
+        function renderTable(title, history) {
+            if (!history || history.length === 0) {
+                return `
+                    <div class="section">
+                        <h2>${title}</h2>
+                        <p style="color: #666;">Нет данных</p>
+                    </div>
+                `;
+            }
+
+            let prevPrice = null;
+            const rows = history.map(point => {
+                const price = point.p;
+                const odds = (1 / price).toFixed(2);
+                const timestamp = new Date(point.t * 1000);
+
+                let change = '';
+                let changeClass = 'change-neutral';
+
+                if (prevPrice !== null) {
+                    const diff = ((price - prevPrice) * 100).toFixed(1);
+                    if (diff > 0) {
+                        change = `+${diff}%`;
+                        changeClass = 'change-positive';
+                    } else if (diff < 0) {
+                        change = `${diff}%`;
+                        changeClass = 'change-negative';
+                    } else {
+                        change = '0%';
+                    }
+                }
+
+                const row = `
+                    <tr>
+                        <td class="timestamp">${timestamp.toLocaleString('ru-RU', {
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })}</td>
+                        <td class="price">${(price * 100).toFixed(1)}%</td>
+                        <td class="odds">${odds}</td>
+                        <td class="${changeClass}">${change}</td>
+                    </tr>
+                `;
+
+                prevPrice = price;
+                return row;
+            }).join('');
+
+            return `
+                <div class="section">
+                    <h2>${title}</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Price</th>
+                                <th>Odds</th>
+                                <th>Change</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rows}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // Load match data on page load
+        loadMatchData();
+
+        // Scroll to match row if coming from index
+        window.addEventListener('load', () => {
+            const hash = window.location.hash;
+            if (hash) {
+                const element = document.querySelector(hash);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

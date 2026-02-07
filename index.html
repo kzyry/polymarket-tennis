@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tennis Matches - Polymarket Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .stats {
+            display: flex;
+            gap: 30px;
+            color: #999;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 15px;
+            background: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #555;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #999;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            background: #333;
+            color: #e0e0e0;
+        }
+
+        .filter-btn.active {
+            background: #0066cc;
+            border-color: #0066cc;
+            color: #fff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            background: #1a1a1a;
+            z-index: 10;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 15px;
+            background: #2a2a2a;
+            color: #999;
+            font-weight: 500;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th:hover {
+            background: #333;
+        }
+
+        th.sortable::after {
+            content: ' ↕';
+            opacity: 0.3;
+        }
+
+        th.sorted-asc::after {
+            content: ' ↑';
+            opacity: 1;
+        }
+
+        th.sorted-desc::after {
+            content: ' ↓';
+            opacity: 1;
+        }
+
+        td {
+            padding: 6px 15px;
+            border-bottom: 1px solid #252525;
+        }
+
+        tr {
+            height: 32px;
+        }
+
+        tr:hover {
+            background: #222;
+            cursor: pointer;
+        }
+
+        tr.highlighted {
+            background-color: rgba(0, 102, 204, 0.2);
+        }
+
+        .match-title {
+            font-weight: 500;
+            color: #e0e0e0;
+        }
+
+        .date {
+            color: #777;
+            font-size: 12px;
+        }
+
+        .volume {
+            font-weight: 600;
+            color: #0066cc;
+        }
+
+        .polymarket-link {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .polymarket-link:hover {
+            background: #333;
+            border-color: #0066cc;
+            color: #60a5fa;
+        }
+
+        .na {
+            color: #555;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Tennis Matches Analysis</h1>
+            <div class="stats">
+                <div class="stat">
+                    <span>Всего матчей:</span>
+                    <span class="stat-value" id="totalMatches">-</span>
+                </div>
+                <div class="stat">
+                    <span>Объём торговли:</span>
+                    <span class="stat-value" id="totalVolume">-</span>
+                </div>
+                <div class="stat">
+                    <span>Собрано данных:</span>
+                    <span class="stat-value" id="dataStatus">-</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Поиск по игрокам...">
+            </div>
+        </div>
+
+        <table id="matchesTable">
+            <thead>
+                <tr>
+                    <th class="sortable" data-sort="date">Дата</th>
+                    <th class="sortable" data-sort="title">Матч</th>
+                    <th class="sortable" data-sort="favorite">Фаворит</th>
+                    <th class="sortable" data-sort="pregame">Pre-game Avg</th>
+                    <th class="sortable" data-sort="result">Результат</th>
+                    <th class="sortable sorted-desc" data-sort="volume">Volume</th>
+                    <th>Polymarket</th>
+                </tr>
+            </thead>
+            <tbody id="matchesBody">
+                <tr>
+                    <td colspan="7" class="loading">Загрузка данных...</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <p>Polymarket Tennis Analysis | Data updating in real-time</p>
+        </div>
+    </div>
+
+    <script>
+        let allMatches = [];
+        let currentFilter = 'all';
+        let currentSort = { column: 'volume', direction: 'desc' };
+
+        async function loadData() {
+            try {
+                const response = await fetch('matches_data.json');
+                const data = await response.json();
+                allMatches = data.matches;
+
+                updateStats(data);
+                renderTable();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('matchesBody').innerHTML =
+                    '<tr><td colspan="7" class="loading">Ошибка загрузки данных</td></tr>';
+            }
+        }
+
+        function updateStats(data) {
+            const totalVolume = data.matches.reduce((sum, m) => sum + m.volume, 0);
+            const completed = data.matches.filter(m => m.status === 'completed').length;
+
+            document.getElementById('totalMatches').textContent = data.total.toLocaleString();
+            document.getElementById('totalVolume').textContent = '$' + totalVolume.toLocaleString('en-US', {maximumFractionDigits: 0});
+            document.getElementById('dataStatus').textContent = `${completed} / ${data.total}`;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('ru-RU', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+
+        function formatVolume(volume) {
+            if (volume >= 1000000) {
+                return '$' + (volume / 1000000).toFixed(2) + 'M';
+            } else if (volume >= 1000) {
+                return '$' + (volume / 1000).toFixed(0) + 'K';
+            } else {
+                return '$' + volume.toFixed(0);
+            }
+        }
+
+        function getPolymarketLink(url) {
+            if (!url) return '<span class="na">-</span>';
+            return `<a href="${url}" target="_blank" class="polymarket-link" onclick="event.stopPropagation()">View ↗</a>`;
+        }
+
+        function filterMatches(matches) {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            let filtered = matches;
+
+            // Filter by search
+            if (searchTerm) {
+                filtered = filtered.filter(m =>
+                    m.title.toLowerCase().includes(searchTerm) ||
+                    m.players.some(p => p.toLowerCase().includes(searchTerm))
+                );
+            }
+
+            return filtered;
+        }
+
+        function sortMatches(matches) {
+            const { column, direction } = currentSort;
+            const mult = direction === 'asc' ? 1 : -1;
+
+            return [...matches].sort((a, b) => {
+                let valA, valB;
+
+                switch(column) {
+                    case 'date':
+                        valA = new Date(a.date || 0);
+                        valB = new Date(b.date || 0);
+                        break;
+                    case 'title':
+                        valA = a.title.toLowerCase();
+                        valB = b.title.toLowerCase();
+                        break;
+                    case 'volume':
+                        valA = a.volume;
+                        valB = b.volume;
+                        break;
+                    default:
+                        return 0;
+                }
+
+                if (valA < valB) return -1 * mult;
+                if (valA > valB) return 1 * mult;
+                return 0;
+            });
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('matchesBody');
+
+            let filtered = filterMatches(allMatches);
+            let sorted = sortMatches(filtered);
+
+            if (sorted.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="loading">Нет результатов</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = sorted.map(match => `
+                <tr id="match-${match.market_id}" onclick="viewMatch('${match.market_id}')">
+                    <td class="date">${formatDate(match.date)}</td>
+                    <td class="match-title">${match.title}</td>
+                    <td class="na">-</td>
+                    <td class="na">-</td>
+                    <td class="na">-</td>
+                    <td class="volume">${formatVolume(match.volume)}</td>
+                    <td>${getPolymarketLink(match.polymarket_url)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function viewMatch(marketId) {
+            // Save current position and match ID for return
+            sessionStorage.setItem('returnToMatch', marketId);
+            sessionStorage.setItem('scrollPosition', window.scrollY);
+            // Navigate to match detail page
+            window.location.href = `match_detail.html?id=${marketId}`;
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', renderTable);
+
+        document.querySelectorAll('th.sortable').forEach(th => {
+            th.addEventListener('click', () => {
+                const column = th.dataset.sort;
+
+                if (currentSort.column === column) {
+                    currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentSort.column = column;
+                    currentSort.direction = 'desc';
+                }
+
+                // Update UI
+                document.querySelectorAll('th').forEach(h => {
+                    h.classList.remove('sorted-asc', 'sorted-desc');
+                });
+
+                th.classList.add(currentSort.direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
+
+                renderTable();
+            });
+        });
+
+        // Handle return from detail page
+        function handleReturn() {
+            const matchId = sessionStorage.getItem('returnToMatch');
+            const scrollPos = sessionStorage.getItem('scrollPosition');
+
+            if (matchId) {
+                // Clear storage
+                sessionStorage.removeItem('returnToMatch');
+                sessionStorage.removeItem('scrollPosition');
+
+                // Restore scroll position immediately
+                if (scrollPos) {
+                    window.scrollTo(0, parseInt(scrollPos));
+                }
+
+                // Highlight the row
+                const element = document.getElementById(`match-${matchId}`);
+                if (element) {
+                    element.classList.add('highlighted');
+                    setTimeout(() => {
+                        element.classList.remove('highlighted');
+                    }, 1500);
+                }
+            }
+        }
+
+        // Initial load with return handling
+        loadData().then(handleReturn);
+
+        // Auto-refresh every 10 seconds
+        setInterval(loadData, 10000);
+    </script>
+</body>
+</html>
