@@ -277,9 +277,24 @@
 
         async function loadData() {
             try {
-                const response = await fetch('matches_data.json');
+                const response = await fetch('data/tennis_markets.json');
                 const data = await response.json();
-                allMatches = data.matches;
+
+                // Transform markets to matches format
+                allMatches = data.markets.map(market => ({
+                    id: market.id,
+                    question: market.question,
+                    slug: market.slug,
+                    outcomes: JSON.parse(market.outcomes),
+                    volume: parseFloat(market.volume) || 0,
+                    clobTokenIds: market.clobTokenIds,
+                    startTs: market.startTs,
+                    endTs: market.endTs,
+                    priceHistory: market.priceHistory,
+                    status: 'completed', // All markets have price history, so they're completed
+                    gameStartTime: new Date(market.startTs * 1000).toISOString(),
+                    url: `https://polymarket.com/event/${market.slug}`
+                }));
 
                 updateStats(data);
                 renderTable();
@@ -291,12 +306,13 @@
         }
 
         function updateStats(data) {
-            const totalVolume = data.matches.reduce((sum, m) => sum + m.volume, 0);
-            const completed = data.matches.filter(m => m.status === 'completed').length;
+            const markets = data.markets || [];
+            const totalVolume = markets.reduce((sum, m) => sum + (parseFloat(m.volume) || 0), 0);
+            const completed = markets.length; // All markets are completed
 
-            document.getElementById('totalMatches').textContent = data.total.toLocaleString();
+            document.getElementById('totalMatches').textContent = markets.length.toLocaleString();
             document.getElementById('totalVolume').textContent = '$' + totalVolume.toLocaleString('en-US', {maximumFractionDigits: 0});
-            document.getElementById('dataStatus').textContent = `${completed} / ${data.total}`;
+            document.getElementById('dataStatus').textContent = `${completed} / ${markets.length}`;
         }
 
         function formatDate(dateStr) {
