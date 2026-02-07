@@ -1,0 +1,197 @@
+{
+  "generated_at": "2026-02-07T17:32:21.095894",
+  "analysis_type": "Full Analysis - Winners + Losers",
+  "methodology": {
+    "description": "Analyzes BOTH players in each match (winner and loser) using price inversion",
+    "window_minutes": 60,
+    "buckets": [
+      "50-55%",
+      "55-60%",
+      "60-65%",
+      "65-70%",
+      "70-75%",
+      "75-80%",
+      "80-85%",
+      "85-90%",
+      "90-95%"
+    ]
+  },
+  "dataset": {
+    "total_markets": 1641,
+    "total_price_points": 151188,
+    "note": "Each market analyzed twice (winner + loser = 2 players)"
+  },
+  "buckets": {
+    "50-55%": {
+      "total_entries": 2228,
+      "from_below": {
+        "entries": 434,
+        "wins": 223,
+        "losses": 211,
+        "win_rate": 51.382488479262676,
+        "avg_price_change_60m": -5.3362596870203705,
+        "positive_change_rate": 39.40092165898618
+      },
+      "from_above": {
+        "entries": 407,
+        "wins": 238,
+        "losses": 169,
+        "win_rate": 58.47665847665847,
+        "avg_price_change_60m": 10.5878803234815,
+        "positive_change_rate": 51.35135135135135
+      }
+    },
+    "55-60%": {
+      "total_entries": 1393,
+      "from_below": {
+        "entries": 766,
+        "wins": 414,
+        "losses": 352,
+        "win_rate": 54.04699738903395,
+        "avg_price_change_60m": -2.3203271949924615,
+        "positive_change_rate": 44.64751958224543
+      },
+      "from_above": {
+        "entries": 503,
+        "wins": 293,
+        "losses": 210,
+        "win_rate": 58.25049701789264,
+        "avg_price_change_60m": 1.4546617547423157,
+        "positive_change_rate": 49.70178926441352
+      }
+    },
+    "60-65%": {
+      "total_entries": 1434,
+      "from_below": {
+        "entries": 817,
+        "wins": 478,
+        "losses": 339,
+        "win_rate": 58.50673194614443,
+        "avg_price_change_60m": -5.161714675811296,
+        "positive_change_rate": 45.89963280293758
+      },
+      "from_above": {
+        "entries": 470,
+        "wins": 284,
+        "losses": 186,
+        "win_rate": 60.42553191489362,
+        "avg_price_change_60m": -1.4247053267428715,
+        "positive_change_rate": 51.276595744680854
+      }
+    },
+    "65-70%": {
+      "total_entries": 1408,
+      "from_below": {
+        "entries": 864,
+        "wins": 539,
+        "losses": 325,
+        "win_rate": 62.38425925925925,
+        "avg_price_change_60m": -6.652577344281038,
+        "positive_change_rate": 45.83333333333333
+      },
+      "from_above": {
+        "entries": 406,
+        "wins": 276,
+        "losses": 130,
+        "win_rate": 67.98029556650246,
+        "avg_price_change_60m": -1.1168705337377312,
+        "positive_change_rate": 54.43349753694581
+      }
+    },
+    "70-75%": {
+      "total_entries": 1359,
+      "from_below": {
+        "entries": 915,
+        "wins": 671,
+        "losses": 244,
+        "win_rate": 73.33333333333333,
+        "avg_price_change_60m": 0.15894974269490997,
+        "positive_change_rate": 56.72131147540984
+      },
+      "from_above": {
+        "entries": 332,
+        "wins": 232,
+        "losses": 100,
+        "win_rate": 69.87951807228916,
+        "avg_price_change_60m": -3.6785512770124913,
+        "positive_change_rate": 55.42168674698795
+      }
+    },
+    "75-80%": {
+      "total_entries": 1315,
+      "from_below": {
+        "entries": 904,
+        "wins": 685,
+        "losses": 219,
+        "win_rate": 75.77433628318585,
+        "avg_price_change_60m": -1.6077092525721262,
+        "positive_change_rate": 55.42035398230089
+      },
+      "from_above": {
+        "entries": 286,
+        "wins": 214,
+        "losses": 72,
+        "win_rate": 74.82517482517483,
+        "avg_price_change_60m": -3.301692942825272,
+        "positive_change_rate": 59.09090909090909
+      }
+    },
+    "80-85%": {
+      "total_entries": 1251,
+      "from_below": {
+        "entries": 921,
+        "wins": 742,
+        "losses": 179,
+        "win_rate": 80.56460369163952,
+        "avg_price_change_60m": -0.9886088787919477,
+        "positive_change_rate": 61.34636264929425
+      },
+      "from_above": {
+        "entries": 238,
+        "wins": 196,
+        "losses": 42,
+        "win_rate": 82.35294117647058,
+        "avg_price_change_60m": 0.023143769818206553,
+        "positive_change_rate": 65.12605042016807
+      }
+    },
+    "85-90%": {
+      "total_entries": 1183,
+      "from_below": {
+        "entries": 983,
+        "wins": 836,
+        "losses": 147,
+        "win_rate": 85.04577822990844,
+        "avg_price_change_60m": -1.9185715298506842,
+        "positive_change_rate": 66.12410986775178
+      },
+      "from_above": {
+        "entries": 138,
+        "wins": 123,
+        "losses": 15,
+        "win_rate": 89.13043478260869,
+        "avg_price_change_60m": 0.09764270484469442,
+        "positive_change_rate": 71.73913043478261
+      }
+    },
+    "90-95%": {
+      "total_entries": 1151,
+      "from_below": {
+        "entries": 1002,
+        "wins": 894,
+        "losses": 108,
+        "win_rate": 89.22155688622755,
+        "avg_price_change_60m": -2.5532099888025823,
+        "positive_change_rate": 72.95409181636727
+      },
+      "from_above": {
+        "entries": 96,
+        "wins": 93,
+        "losses": 3,
+        "win_rate": 96.875,
+        "avg_price_change_60m": -0.532918945184467,
+        "positive_change_rate": 77.08333333333334
+      }
+    }
+  }
+}

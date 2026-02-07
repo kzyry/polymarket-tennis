@@ -444,7 +444,7 @@
 
         async function loadMomentumData() {
             try {
-                const response = await fetch('tennis_momentum_analysis_v2.json');
+                const response = await fetch('tennis_momentum_analysis_v4_full.json');
                 momentumData = await response.json();
                 renderMomentumDashboard();
             } catch (error) {
@@ -458,63 +458,73 @@
             const dashboard = document.getElementById('momentumDashboard');
             const grid = document.getElementById('momentumGrid');
 
-            // Show most interesting insights
+            // Show most actionable insights from v4 analysis
             const cards = [];
 
-            // Card 1: Best early entry point (50-55%)
+            // Card 1: HIGH CONFIDENCE STRATEGY (80-85% entry)
+            const bucket8085 = momentumData.buckets['80-85%'];
+            if (bucket8085) {
+                const fromBelow = bucket8085.from_below;
+                cards.push({
+                    title: 'High Confidence (80-85%)',
+                    value: `${fromBelow.win_rate.toFixed(1)}%`,
+                    change: `Win Rate • ${fromBelow.positive_change_rate.toFixed(1)}% gain rate`,
+                    positive: true,
+                    subtitle: `${fromBelow.entries} entries analyzed`,
+                    bucketData: bucket8085,
+                    bucketName: '80-85%',
+                    strategyType: 'high_confidence'
+                });
+            }
+
+            // Card 2: REBOUND STRATEGY (50-55% from above)
             const bucket5055 = momentumData.buckets['50-55%'];
             if (bucket5055) {
-                const w60 = bucket5055.time_windows['60_minutes'];
+                const fromAbove = bucket5055.from_above;
                 cards.push({
-                    title: '50-55% Entry (60min)',
-                    value: `${w60.strong_continuation_rate.toFixed(1)}%`,
-                    change: `Avg: +${w60.avg_price_change_pct.toFixed(1)}%`,
-                    positive: true,
-                    subtitle: `${bucket5055.total_first_touches} samples`,
+                    title: 'Rebound Entry (50-55% ↓)',
+                    value: `${fromAbove.win_rate.toFixed(1)}%`,
+                    change: `Avg: ${fromAbove.avg_price_change_60m >= 0 ? '+' : ''}${fromAbove.avg_price_change_60m.toFixed(1)}%`,
+                    positive: fromAbove.avg_price_change_60m > 0,
+                    subtitle: `${fromAbove.entries} entries • Price fell into range`,
                     bucketData: bucket5055,
-                    bucketName: '50-55%'
+                    bucketName: '50-55%',
+                    direction: 'from_above',
+                    strategyType: 'rebound'
                 });
             }
 
-            // Card 2: Medium bucket (70-75%)
-            const bucket7075 = momentumData.buckets['70-75%'];
-            if (bucket7075) {
-                const w60 = bucket7075.time_windows['60_minutes'];
+            // Card 3: AVOID - False Breakout (50-55% from below)
+            if (bucket5055) {
+                const fromBelow = bucket5055.from_below;
                 cards.push({
-                    title: '70-75% Entry (60min)',
-                    value: `${w60.strong_continuation_rate.toFixed(1)}%`,
-                    change: `Avg: +${w60.avg_price_change_pct.toFixed(1)}%`,
-                    positive: true,
-                    subtitle: `${bucket7075.total_first_touches} samples`,
-                    bucketData: bucket7075,
-                    bucketName: '70-75%'
+                    title: '⚠️ Avoid (50-55% ↑)',
+                    value: `${fromBelow.win_rate.toFixed(1)}%`,
+                    change: `Avg: ${fromBelow.avg_price_change_60m.toFixed(1)}%`,
+                    positive: false,
+                    subtitle: `${fromBelow.entries} entries • False breakouts`,
+                    bucketData: bucket5055,
+                    bucketName: '50-55%',
+                    direction: 'from_below',
+                    strategyType: 'avoid'
                 });
             }
 
-            // Card 3: High confidence (85-90%)
+            // Card 4: BEST ENTRY (85-90%)
             const bucket8590 = momentumData.buckets['85-90%'];
             if (bucket8590) {
-                const w60 = bucket8590.time_windows['60_minutes'];
+                const fromBelow = bucket8590.from_below;
                 cards.push({
-                    title: '85-90% Entry (60min)',
-                    value: `${w60.strong_continuation_rate.toFixed(1)}%`,
-                    change: `Avg: +${w60.avg_price_change_pct.toFixed(1)}%`,
+                    title: 'Best Entry (85-90%)',
+                    value: `${fromBelow.win_rate.toFixed(1)}%`,
+                    change: `Win Rate • ${fromBelow.positive_change_rate.toFixed(1)}% gain rate`,
                     positive: true,
-                    subtitle: `${bucket8590.total_first_touches} samples`,
+                    subtitle: `${fromBelow.entries} entries analyzed`,
                     bucketData: bucket8590,
-                    bucketName: '85-90%'
+                    bucketName: '85-90%',
+                    strategyType: 'best_entry'
                 });
             }
-
-            // Card 4: Total samples analyzed
-            cards.push({
-                title: 'Total First Touches',
-                value: Object.values(momentumData.buckets).reduce((sum, b) => sum + b.total_first_touches, 0).toLocaleString(),
-                change: `${momentumData.dataset.total_markets} markets`,
-                positive: null,
-                subtitle: `${momentumData.dataset.total_price_points.toLocaleString()} data points`,
-                isSummary: true
-            });
 
             // Render cards
             grid.innerHTML = cards.map((card, index) => `
@@ -537,96 +547,129 @@
             const popup = document.getElementById('momentumPopup');
             const body = document.getElementById('momentumPopupBody');
 
-            if (card.isSummary) {
-                // Summary card
-                body.innerHTML = `
-                    <div class="momentum-popup-title">${card.title}</div>
+            // Get the relevant data based on strategy type
+            let strategyData;
+            if (card.direction === 'from_above') {
+                strategyData = card.bucketData.from_above;
+            } else if (card.direction === 'from_below') {
+                strategyData = card.bucketData.from_below;
+            } else {
+                strategyData = card.bucketData.from_below; // default
+            }
 
-                    <div class="momentum-popup-section">
-                        <h3>Что это означает?</h3>
-                        <p>Это общая статистика по всем проанализированным данным.</p>
-                    </div>
+            const bucketRange = card.bucketName.split('-');
+            const midPrice = (parseFloat(bucketRange[0]) + parseFloat(bucketRange[1])) / 2;
+            const exampleEntry = midPrice;
+            const exampleFinal = exampleEntry * (1 + strategyData.avg_price_change_60m / 100);
 
-                    <div class="momentum-popup-section">
-                        <h3>Размер выборки</h3>
-                        <p><code>${card.value}</code> = Общее количество "первых касаний" всех ценовых диапазонов</p>
-                        <p>Это моменты, когда цена впервые входила в каждый диапазон (50-55%, 55-60%, и т.д.)</p>
-                    </div>
+            // Strategy-specific content
+            let strategyDescription = '';
+            let strategyAdvice = '';
 
+            if (card.strategyType === 'high_confidence') {
+                strategyDescription = 'Стратегия высокой уверенности - вход на уровне 80-85%';
+                strategyAdvice = `
                     <div class="momentum-popup-section">
-                        <h3>Данные анализа</h3>
-                        <p><code>${card.change}</code> = Проанализировано маркетов</p>
-                        <p><code>${card.subtitle}</code> = Всего точек данных о ценах</p>
-                    </div>
-
-                    <div class="momentum-popup-section">
-                        <h3>Методология</h3>
-                        <p>Анализ использует подход "First Touch + Time Windows":</p>
-                        <ul style="margin-left: 20px; color: #ccc;">
-                            <li>Отслеживаем только первое попадание цены в каждый диапазон</li>
-                            <li>Измеряем движение цены в окнах 15, 30, 60 и 120 минут</li>
-                            <li>Избегаем look-ahead bias (не используем будущие данные)</li>
+                        <h3>🎯 Рекомендуемая стратегия</h3>
+                        <p style="color: #0f0; font-weight: bold;">ПОКУПАТЬ - Высокая вероятность успеха</p>
+                        <p><strong>Правила входа:</strong></p>
+                        <ul style="margin-left: 20px; color: #ccc; line-height: 1.8;">
+                            <li>Цена игрока достигла 80-85%</li>
+                            <li>Не важно, откуда пришла (снизу или сверху)</li>
+                            <li>Держать 60 минут или до конца матча</li>
                         </ul>
+                        <p style="margin-top: 10px;"><strong>Ожидаемый результат:</strong> Win rate ${strategyData.win_rate.toFixed(1)}%, вероятность роста ${strategyData.positive_change_rate.toFixed(1)}%</p>
                     </div>
                 `;
-            } else {
-                // Bucket card
-                const w60 = card.bucketData.time_windows['60_minutes'];
-                const bucketRange = card.bucketName.split('-');
-                const midPrice = (parseFloat(bucketRange[0]) + parseFloat(bucketRange[1])) / 2;
-                const avgFinalPrice = midPrice * (1 + w60.avg_price_change_pct / 100);
-                const exampleEntry = midPrice;
-                const exampleFinal = exampleEntry * (1 + w60.avg_price_change_pct / 100);
-
-                body.innerHTML = `
-                    <div class="momentum-popup-title">${card.title}</div>
-
+            } else if (card.strategyType === 'best_entry') {
+                strategyDescription = 'Лучшая точка входа - максимальная уверенность';
+                strategyAdvice = `
                     <div class="momentum-popup-section">
-                        <h3>Что это означает?</h3>
-                        <p>Анализ входа в ценовой диапазон <code>${card.bucketName}</code></p>
-                        <p>Мы смотрим на ситуацию, когда цена (вероятность победы игрока) <strong>впервые</strong> достигает этого диапазона.</p>
-                    </div>
-
-                    <div class="momentum-popup-section">
-                        <h3>Strong Continuation Rate: ${w60.strong_continuation_rate.toFixed(1)}%</h3>
-                        <p>В <code>${w60.strong_continuation_rate.toFixed(1)}%</code> случаев цена <strong>выросла на 5% и более</strong> в течение следующих 60 минут.</p>
-                        <div class="momentum-popup-example">
-                            Пример: если цена была ${exampleEntry.toFixed(1)}%, через час она стала ≥${(exampleEntry * 1.05).toFixed(1)}%
-                        </div>
-                    </div>
-
-                    <div class="momentum-popup-section">
-                        <h3>Средний рост: +${w60.avg_price_change_pct.toFixed(1)}%</h3>
-                        <p>В среднем, цена выросла на <code>${w60.avg_price_change_pct.toFixed(1)}%</code> от начального значения за 60 минут.</p>
-                        <div class="momentum-popup-example">
-                            Пример: если вход был на ${exampleEntry.toFixed(1)}%, средняя цена через час = ${exampleEntry.toFixed(1)}% × ${(1 + w60.avg_price_change_pct / 100).toFixed(3)} = <strong>${exampleFinal.toFixed(1)}%</strong>
-                        </div>
-                    </div>
-
-                    <div class="momentum-popup-section">
-                        <h3>Размер выборки: ${card.bucketData.total_first_touches} samples</h3>
-                        <p>Это произошло <code>${card.bucketData.total_first_touches}</code> раз во всех проанализированных матчах.</p>
-                        <p style="color: #0f0;">Большая выборка = статистически значимый результат</p>
-                    </div>
-
-                    <div class="momentum-popup-section">
-                        <h3>Практический смысл</h3>
-                        <p>Когда цена игрока впервые достигает ${card.bucketName} (${bucketRange[0]}%-${bucketRange[1]}%), с высокой вероятностью (<code>${w60.strong_continuation_rate.toFixed(1)}%</code>) эта цена продолжит расти в течение следующего часа, в среднем до <strong>~${avgFinalPrice.toFixed(1)}%</strong>.</p>
-                        <p style="color: #0066cc; margin-top: 10px;">Это указывает на сильный <strong>momentum эффект</strong> - рынок склонен продолжать движение в том же направлении после достижения этого уровня.</p>
-                    </div>
-
-                    <div class="momentum-popup-section">
-                        <h3>Дополнительные метрики (60 минут)</h3>
+                        <h3>🏆 Оптимальная стратегия</h3>
+                        <p style="color: #0f0; font-weight: bold;">ПОКУПАТЬ - Максимальная вероятность</p>
+                        <p><strong>Правила входа:</strong></p>
                         <ul style="margin-left: 20px; color: #ccc; line-height: 1.8;">
-                            <li>Continuation (2-5% рост): ${w60.continuation_rate.toFixed(1)}%</li>
-                            <li>Sideways (±2%): ${w60.sideways_rate.toFixed(1)}%</li>
-                            <li>Reversal (2-5% падение): ${w60.reversal_rate.toFixed(1)}%</li>
-                            <li>Strong Reversal (5%+ падение): ${w60.strong_reversal_rate.toFixed(1)}%</li>
-                            <li>Достигли следующего диапазона: ${w60.reached_next_bucket_rate.toFixed(1)}%</li>
+                            <li>Цена игрока впервые достигла 85-90%</li>
+                            <li>Самый высокий win rate: ${strategyData.win_rate.toFixed(1)}%</li>
+                            <li>Держать до конца матча</li>
                         </ul>
+                        <p style="margin-top: 10px;"><strong>Риск:</strong> Минимальный. <strong>Доходность:</strong> Умеренная, но стабильная.</p>
+                    </div>
+                `;
+            } else if (card.strategyType === 'rebound') {
+                strategyDescription = 'Стратегия отскока - цена упала с высоких уровней';
+                strategyAdvice = `
+                    <div class="momentum-popup-section">
+                        <h3>📈 Стратегия коррекции</h3>
+                        <p style="color: #0f0; font-weight: bold;">ПОКУПАТЬ - Хорошая возможность</p>
+                        <p><strong>Правила входа:</strong></p>
+                        <ul style="margin-left: 20px; color: #ccc; line-height: 1.8;">
+                            <li>Цена УПАЛА с 70%+ до 50-55%</li>
+                            <li>Это временная коррекция</li>
+                            <li>Win rate: ${strategyData.win_rate.toFixed(1)}%, средний рост через час: ${strategyData.avg_price_change_60m >= 0 ? '+' : ''}${strategyData.avg_price_change_60m.toFixed(1)}%</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>Логика:</strong> Рынок "перепродал" фаворита. Цена вернётся.</p>
+                    </div>
+                `;
+            } else if (card.strategyType === 'avoid') {
+                strategyDescription = 'ИЗБЕГАТЬ - Ложные пробои, высокий риск';
+                strategyAdvice = `
+                    <div class="momentum-popup-section">
+                        <h3>⚠️ НЕ покупать!</h3>
+                        <p style="color: #f00; font-weight: bold;">ИЗБЕГАТЬ - Ложный пробой</p>
+                        <p><strong>Почему избегать:</strong></p>
+                        <ul style="margin-left: 20px; color: #ccc; line-height: 1.8;">
+                            <li>Цена ВЫРОСЛА с 30-40% до 50-55%</li>
+                            <li>Win rate всего ${strategyData.win_rate.toFixed(1)}% (почти 50/50)</li>
+                            <li>Средний результат через час: <span style="color: #f00;">${strategyData.avg_price_change_60m.toFixed(1)}%</span></li>
+                            <li>Высокая вероятность отката назад</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>Логика:</strong> Это ложный пробой уровня 50%. Цена скорее всего откатится.</p>
                     </div>
                 `;
             }
+
+            body.innerHTML = `
+                <div class="momentum-popup-title">${card.title}</div>
+
+                <div class="momentum-popup-section">
+                    <h3>Что это означает?</h3>
+                    <p>${strategyDescription}</p>
+                    <p>Анализ основан на <strong>обоих игроках</strong> (победителях и проигравших) в ${momentumData.dataset.total_markets} матчах.</p>
+                </div>
+
+                <div class="momentum-popup-section">
+                    <h3>Win Rate: ${strategyData.win_rate.toFixed(1)}%</h3>
+                    <p>Вероятность того, что игрок, достигший этого уровня, <strong>выиграет матч</strong>: <code>${strategyData.win_rate.toFixed(1)}%</code></p>
+                    <p>Проанализировано: ${strategyData.wins} побед и ${strategyData.losses} поражений из ${strategyData.entries} случаев.</p>
+                </div>
+
+                <div class="momentum-popup-section">
+                    <h3>Средний рост за 60 минут: ${strategyData.avg_price_change_60m >= 0 ? '+' : ''}${strategyData.avg_price_change_60m.toFixed(1)}%</h3>
+                    <p>В среднем, через 60 минут после входа в этот диапазон, цена изменяется на <code>${strategyData.avg_price_change_60m >= 0 ? '+' : ''}${strategyData.avg_price_change_60m.toFixed(1)}%</code>.</p>
+                    <div class="momentum-popup-example">
+                        Пример: вход на ${exampleEntry.toFixed(1)}% → через час в среднем ${exampleFinal.toFixed(1)}%
+                    </div>
+                </div>
+
+                <div class="momentum-popup-section">
+                    <h3>Вероятность роста >2%: ${strategyData.positive_change_rate.toFixed(1)}%</h3>
+                    <p>В <code>${strategyData.positive_change_rate.toFixed(1)}%</code> случаев цена вырастает более чем на 2% в течение 60 минут.</p>
+                </div>
+
+                ${strategyAdvice}
+
+                <div class="momentum-popup-section">
+                    <h3>Методология v4</h3>
+                    <p>Этот анализ учитывает <strong>ОБА</strong> направления входа и <strong>обоих игроков</strong>:</p>
+                    <ul style="margin-left: 20px; color: #ccc;">
+                        <li>Анализируем победителей И проигравших (цены инвертированы)</li>
+                        <li>Разделяем: "цена пришла снизу" vs "цена пришла сверху"</li>
+                        <li>60-минутное окно анализа</li>
+                        <li>Избегаем selection bias</li>
+                    </ul>
+                </div>
+            `;
 
             popup.classList.add('active');
         }
