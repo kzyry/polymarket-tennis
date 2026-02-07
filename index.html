@@ -249,7 +249,6 @@
         <table id="matchesTable">
             <thead>
                 <tr>
-                    <th class="sortable" data-sort="date">Дата</th>
                     <th class="sortable" data-sort="title">Матч</th>
                     <th class="sortable" data-sort="favorite">Фаворит</th>
                     <th class="sortable" data-sort="pregame">Pre-game Avg</th>
@@ -260,7 +259,7 @@
             </thead>
             <tbody id="matchesBody">
                 <tr>
-                    <td colspan="7" class="loading">Загрузка данных...</td>
+                    <td colspan="6" class="loading">Загрузка данных...</td>
                 </tr>
             </tbody>
         </table>
@@ -397,13 +396,12 @@
             let sorted = sortMatches(filtered);
 
             if (sorted.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="loading">Нет результатов</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" class="loading">Нет результатов</td></tr>';
                 return;
             }
 
             tbody.innerHTML = sorted.map(match => `
                 <tr id="match-${match.market_id}" onclick="viewMatch('${match.market_id}')">
-                    <td class="date">${formatDate(match.date)}</td>
                     <td class="match-title">${match.title}</td>
                     <td class="na">-</td>
                     <td class="na">-</td>
