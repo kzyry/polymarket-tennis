@@ -198,11 +198,13 @@
 
         function renderMatch(match, priceHistory) {
             document.getElementById('title').textContent = match.title;
-            
+
             const volume = match.volume || 0;
             const gameDate = match.date ? new Date(match.date).toLocaleString('ru-RU') : 'N/A';
-            
+            const player = match.players && match.players[0] ? match.players[0] : 'Player 1';
+
             document.getElementById('meta').innerHTML = `
+                <strong>Outcome: ${player} wins</strong><br>
                 Volume: $${volume.toLocaleString('en-US', {maximumFractionDigits: 0})} |
                 Game Start: ${gameDate}
             `;
@@ -276,11 +278,14 @@
             return `
                 <div class="section">
                     <h2>${title}</h2>
+                    <p style="color: #999; margin-bottom: 10px; font-size: 12px;">
+                        Price = вероятность победы в % • Odds = десятичный коэффициент (1/Price)
+                    </p>
                     <table>
                         <thead>
                             <tr>
                                 <th>Time</th>
-                                <th>Price</th>
+                                <th>Price (%)</th>
                                 <th>Odds</th>
                                 <th>Change</th>
                             </tr>
