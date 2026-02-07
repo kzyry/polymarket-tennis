@@ -282,7 +282,9 @@
 
                 // Transform markets to matches format
                 allMatches = data.markets.map(market => ({
+                    market_id: market.id,
                     id: market.id,
+                    title: market.question,
                     question: market.question,
                     slug: market.slug,
                     outcomes: JSON.parse(market.outcomes),
@@ -291,8 +293,10 @@
                     startTs: market.startTs,
                     endTs: market.endTs,
                     priceHistory: market.priceHistory,
-                    status: 'completed', // All markets have price history, so they're completed
+                    status: 'completed',
+                    date: new Date(market.startTs * 1000).toISOString(),
                     gameStartTime: new Date(market.startTs * 1000).toISOString(),
+                    polymarket_url: `https://polymarket.com/event/${market.slug}`,
                     url: `https://polymarket.com/event/${market.slug}`
                 }));
 
