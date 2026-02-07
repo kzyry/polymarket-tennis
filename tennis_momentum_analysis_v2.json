@@ -1,0 +1,543 @@
+{
+  "generated_at": "2026-02-07T16:53:39.656222",
+  "analysis_type": "First Touch + Time Windows",
+  "methodology": {
+    "description": "Analyzes first entry into each price bucket and tracks price movement in defined time windows",
+    "time_windows_minutes": [
+      15,
+      30,
+      60,
+      120
+    ],
+    "buckets": [
+      "50-55%",
+      "55-60%",
+      "60-65%",
+      "65-70%",
+      "70-75%",
+      "75-80%",
+      "80-85%",
+      "85-90%",
+      "90-95%"
+    ]
+  },
+  "dataset": {
+    "total_markets": 1641,
+    "total_price_points": 151188
+  },
+  "buckets": {
+    "50-55%": {
+      "total_first_touches": 1149,
+      "final_yes": 1148,
+      "final_no": 1,
+      "final_yes_rate": 99.91296779808529,
+      "final_no_rate": 0.08703220191470844,
+      "time_windows": {
+        "15_minutes": {
+          "sample_size": 1149,
+          "strong_continuation_rate": 48.215839860748474,
+          "continuation_rate": 2.610966057441253,
+          "sideways_rate": 20.974760661444737,
+          "reversal_rate": 2.959094865100087,
+          "strong_reversal_rate": 25.23933855526545,
+          "reached_next_bucket_rate": 54.22106179286336,
+          "avg_price_change_pct": 13.268759248315245,
+          "avg_max_gain_pct": 18.94447064357111,
+          "avg_max_drawdown_pct": 4.566862024190982
+        },
+        "30_minutes": {
+          "sample_size": 1149,
+          "strong_continuation_rate": 54.308093994778076,
+          "continuation_rate": 2.5239338555265447,
+          "sideways_rate": 17.92863359442994,
+          "reversal_rate": 2.5239338555265447,
+          "strong_reversal_rate": 22.715404699738905,
+          "reached_next_bucket_rate": 63.62053959965187,
+          "avg_price_change_pct": 19.62157685931646,
+          "avg_max_gain_pct": 28.87318120253101,
+          "avg_max_drawdown_pct": 0.10274170697800743
+        },
+        "60_minutes": {
+          "sample_size": 1149,
+          "strong_continuation_rate": 60.313315926892955,
+          "continuation_rate": 2.0017406440382945,
+          "sideways_rate": 15.230635335073977,
+          "reversal_rate": 2.175805047867711,
+          "strong_reversal_rate": 20.278503046127067,
+          "reached_next_bucket_rate": 73.71627502175805,
+          "avg_price_change_pct": 29.787698066468167,
+          "avg_max_gain_pct": 43.89574621061175,
+          "avg_max_drawdown_pct": -5.960726103222625
+        },
+        "120_minutes": {
+          "sample_size": 1149,
+          "strong_continuation_rate": 75.10879025239339,
+          "continuation_rate": 1.6536118363794605,
+          "sideways_rate": 9.747606614447346,
+          "reversal_rate": 1.1314186248912097,
+          "strong_reversal_rate": 12.358572671888599,
+          "reached_next_bucket_rate": 86.5970409051349,
+          "avg_price_change_pct": 53.32230359828986,
+          "avg_max_gain_pct": 65.3929053000829,
+          "avg_max_drawdown_pct": -11.762142415646252
+        }
+      }
+    },
+    "55-60%": {
+      "total_first_touches": 774,
+      "final_yes": 774,
+      "final_no": 0,
+      "final_yes_rate": 100.0,
+      "final_no_rate": 0.0,
+      "time_windows": {
+        "15_minutes": {
+          "sample_size": 774,
+          "strong_continuation_rate": 46.89922480620155,
+          "continuation_rate": 5.684754521963824,
+          "sideways_rate": 18.217054263565892,
+          "reversal_rate": 4.651162790697675,
+          "strong_reversal_rate": 24.54780361757106,
+          "reached_next_bucket_rate": 59.30232558139535,
+          "avg_price_change_pct": 7.998504016320149,
+          "avg_max_gain_pct": 14.27474638812538,
+          "avg_max_drawdown_pct": -2.995244380357042
+        },
+        "30_minutes": {
+          "sample_size": 774,
+          "strong_continuation_rate": 56.33074935400517,
+          "continuation_rate": 4.0051679586563305,
+          "sideways_rate": 12.144702842377262,
+          "reversal_rate": 3.6175710594315245,
+          "strong_reversal_rate": 23.901808785529717,
+          "reached_next_bucket_rate": 73.90180878552972,
+          "avg_price_change_pct": 15.76610103805283,
+          "avg_max_gain_pct": 26.222742560698357,
+          "avg_max_drawdown_pct": -8.557922687909226
+        },
+        "60_minutes": {
+          "sample_size": 774,
+          "strong_continuation_rate": 66.1498708010336,
+          "continuation_rate": 2.1963824289405682,
+          "sideways_rate": 9.17312661498708,
+          "reversal_rate": 1.937984496124031,
+          "strong_reversal_rate": 20.54263565891473,
+          "reached_next_bucket_rate": 83.59173126614988,
+          "avg_price_change_pct": 31.048022478886143,
+          "avg_max_gain_pct": 43.869176953938684,
+          "avg_max_drawdown_pct": -14.950326425705615
+        },
+        "120_minutes": {
+          "sample_size": 774,
+          "strong_continuation_rate": 80.10335917312662,
+          "continuation_rate": 1.421188630490956,
+          "sideways_rate": 6.5891472868217065,
+          "reversal_rate": 0.9043927648578811,
+          "strong_reversal_rate": 10.981912144702841,
+          "reached_next_bucket_rate": 90.69767441860465,
+          "avg_price_change_pct": 52.1737721039626,
+          "avg_max_gain_pct": 60.012770151841025,
+          "avg_max_drawdown_pct": -19.264589953853186
+        }
+      }
+    },
+    "60-65%": {
+      "total_first_touches": 850,
+      "final_yes": 850,
+      "final_no": 0,
+      "final_yes_rate": 100.0,
+      "final_no_rate": 0.0,
+      "time_windows": {
+        "15_minutes": {
+          "sample_size": 850,
+          "strong_continuation_rate": 42.58823529411765,
+          "continuation_rate": 5.411764705882352,
+          "sideways_rate": 19.88235294117647,
+          "reversal_rate": 5.176470588235294,
+          "strong_reversal_rate": 26.941176470588236,
+          "reached_next_bucket_rate": 55.76470588235294,
+          "avg_price_change_pct": 4.321193627217241,
+          "avg_max_gain_pct": 9.627061795793896,
+          "avg_max_drawdown_pct": -4.91904252943986
+        },
+        "30_minutes": {
+          "sample_size": 850,
+          "strong_continuation_rate": 52.8235294117647,
+          "continuation_rate": 5.0588235294117645,
+          "sideways_rate": 13.411764705882353,
+          "reversal_rate": 3.882352941176471,
+          "strong_reversal_rate": 24.823529411764707,
+          "reached_next_bucket_rate": 72.23529411764706,
+          "avg_price_change_pct": 10.786780591375164,
+          "avg_max_gain_pct": 20.445739844253,
+          "avg_max_drawdown_pct": -10.467150872566254
+        },
+        "60_minutes": {
+          "sample_size": 850,
+          "strong_continuation_rate": 65.52941176470588,
+          "continuation_rate": 3.5294117647058822,
+          "sideways_rate": 10.0,
+          "reversal_rate": 1.411764705882353,
+          "strong_reversal_rate": 19.52941176470588,
+          "reached_next_bucket_rate": 84.58823529411764,
+          "avg_price_change_pct": 24.02460639823534,
+          "avg_max_gain_pct": 35.30084242086703,
+          "avg_max_drawdown_pct": -16.16232861570304
+        },
+        "120_minutes": {
+          "sample_size": 850,
+          "strong_continuation_rate": 82.82352941176471,
+          "continuation_rate": 1.7647058823529411,
+          "sideways_rate": 5.764705882352941,
+          "reversal_rate": 0.4705882352941176,
+          "strong_reversal_rate": 9.176470588235293,
+          "reached_next_bucket_rate": 93.05882352941175,
+          "avg_price_change_pct": 43.631140312157065,
+          "avg_max_gain_pct": 50.070452003460744,
+          "avg_max_drawdown_pct": -20.150399013262046
+        }
+      }
+    },
+    "65-70%": {
+      "total_first_touches": 909,
+      "final_yes": 909,
+      "final_no": 0,
+      "final_yes_rate": 100.0,
+      "final_no_rate": 0.0,
+      "time_windows": {
+        "15_minutes": {
+          "sample_size": 908,
+          "strong_continuation_rate": 39.647577092511014,
+          "continuation_rate": 7.709251101321586,
+          "sideways_rate": 20.044052863436125,
+          "reversal_rate": 5.506607929515418,
+          "strong_reversal_rate": 27.09251101321586,
+          "reached_next_bucket_rate": 52.20264317180616,
+          "avg_price_change_pct": 2.301069524178182,
+          "avg_max_gain_pct": 7.56406987293684,
+          "avg_max_drawdown_pct": -5.404062993369375
+        },
+        "30_minutes": {
+          "sample_size": 909,
+          "strong_continuation_rate": 49.72497249724972,
+          "continuation_rate": 5.060506050605061,
+          "sideways_rate": 14.08140814081408,
+          "reversal_rate": 3.6303630363036308,
+          "strong_reversal_rate": 27.502750275027505,
+          "reached_next_bucket_rate": 69.1969196919692,
+          "avg_price_change_pct": 7.336352722967515,
+          "avg_max_gain_pct": 16.70794593404891,
+          "avg_max_drawdown_pct": -10.813947445916051
+        },
+        "60_minutes": {
+          "sample_size": 909,
+          "strong_continuation_rate": 63.366336633663366,
+          "continuation_rate": 2.31023102310231,
+          "sideways_rate": 9.350935093509351,
+          "reversal_rate": 2.7502750275027505,
+          "strong_reversal_rate": 22.22222222222222,
+          "reached_next_bucket_rate": 82.72827282728272,
+          "avg_price_change_pct": 17.12803384767496,
+          "avg_max_gain_pct": 27.911375630767175,
+          "avg_max_drawdown_pct": -16.46574814196842
+        },
+        "120_minutes": {
+          "sample_size": 909,
+          "strong_continuation_rate": 81.62816281628163,
+          "continuation_rate": 1.4301430143014302,
+          "sideways_rate": 5.17051705170517,
+          "reversal_rate": 1.3201320132013201,
+          "strong_reversal_rate": 10.45104510451045,
+          "reached_next_bucket_rate": 92.4092409240924,
+          "avg_price_change_pct": 33.565942609590564,
+          "avg_max_gain_pct": 39.82790769808032,
+          "avg_max_drawdown_pct": -20.24684319417991
+        }
+      }
+    },
+    "70-75%": {
+      "total_first_touches": 976,
+      "final_yes": 975,
+      "final_no": 1,
+      "final_yes_rate": 99.89754098360656,
+      "final_no_rate": 0.10245901639344263,
+      "time_windows": {
+        "15_minutes": {
+          "sample_size": 974,
+          "strong_continuation_rate": 40.6570841889117,
+          "continuation_rate": 7.392197125256674,
+          "sideways_rate": 17.5564681724846,
+          "reversal_rate": 6.878850102669405,
+          "strong_reversal_rate": 27.51540041067762,
+          "reached_next_bucket_rate": 53.38809034907598,
+          "avg_price_change_pct": 1.1655935913947808,
+          "avg_max_gain_pct": 5.588658588522656,
+          "avg_max_drawdown_pct": -5.611285529720786
+        },
+        "30_minutes": {
+          "sample_size": 975,
+          "strong_continuation_rate": 51.28205128205128,
+          "continuation_rate": 4.82051282051282,
+          "sideways_rate": 13.846153846153847,
+          "reversal_rate": 4.923076923076923,
+          "strong_reversal_rate": 25.128205128205128,
+          "reached_next_bucket_rate": 69.64102564102565,
+          "avg_price_change_pct": 5.677026964126215,
+          "avg_max_gain_pct": 13.769228960023602,
+          "avg_max_drawdown_pct": -11.039597699788192
+        },
+        "60_minutes": {
+          "sample_size": 975,
+          "strong_continuation_rate": 66.66666666666666,
+          "continuation_rate": 2.2564102564102564,
+          "sideways_rate": 9.333333333333334,
+          "reversal_rate": 3.076923076923077,
+          "strong_reversal_rate": 18.666666666666668,
+          "reached_next_bucket_rate": 84.1025641025641,
+          "avg_price_change_pct": 14.481460226879106,
+          "avg_max_gain_pct": 23.32040681507582,
+          "avg_max_drawdown_pct": -16.63918272020952
+        },
+        "120_minutes": {
+          "sample_size": 976,
+          "strong_continuation_rate": 82.37704918032787,
+          "continuation_rate": 1.5368852459016393,
+          "sideways_rate": 5.737704918032787,
+          "reversal_rate": 0.9221311475409836,
+          "strong_reversal_rate": 9.426229508196721,
+          "reached_next_bucket_rate": 93.23770491803278,
+          "avg_price_change_pct": 27.03729696907186,
+          "avg_max_gain_pct": 32.03675048298583,
+          "avg_max_drawdown_pct": -19.850094755845117
+        }
+      }
+    },
+    "75-80%": {
+      "total_first_touches": 990,
+      "final_yes": 989,
+      "final_no": 1,
+      "final_yes_rate": 99.8989898989899,
+      "final_no_rate": 0.10101010101010101,
+      "time_windows": {
+        "15_minutes": {
+          "sample_size": 989,
+          "strong_continuation_rate": 40.34378159757331,
+          "continuation_rate": 7.280080889787664,
+          "sideways_rate": 20.525783619817997,
+          "reversal_rate": 5.6622851365015165,
+          "strong_reversal_rate": 26.188068756319517,
+          "reached_next_bucket_rate": 54.903943377148636,
+          "avg_price_change_pct": 0.7203262841478789,
+          "avg_max_gain_pct": 4.729562397138204,
+          "avg_max_drawdown_pct": -5.465633944492487
+        },
+        "30_minutes": {
+          "sample_size": 989,
+          "strong_continuation_rate": 52.37613751263903,
+          "continuation_rate": 4.3478260869565215,
+          "sideways_rate": 13.144590495449949,
+          "reversal_rate": 3.1344792719919106,
+          "strong_reversal_rate": 26.99696663296259,
+          "reached_next_bucket_rate": 68.95854398382204,
+          "avg_price_change_pct": 3.593622121906562,
+          "avg_max_gain_pct": 11.222022963544516,
+          "avg_max_drawdown_pct": -10.024328468304738
+        },
+        "60_minutes": {
+          "sample_size": 990,
+          "strong_continuation_rate": 65.25252525252525,
+          "continuation_rate": 2.9292929292929295,
+          "sideways_rate": 9.191919191919192,
+          "reversal_rate": 2.323232323232323,
+          "strong_reversal_rate": 20.303030303030305,
+          "reached_next_bucket_rate": 81.91919191919192,
+          "avg_price_change_pct": 10.206347274408932,
+          "avg_max_gain_pct": 18.087545590388476,
+          "avg_max_drawdown_pct": -14.984592485345521
+        },
+        "120_minutes": {
+          "sample_size": 990,
+          "strong_continuation_rate": 82.22222222222221,
+          "continuation_rate": 1.5151515151515151,
+          "sideways_rate": 4.646464646464646,
+          "reversal_rate": 0.7070707070707071,
+          "strong_reversal_rate": 10.909090909090908,
+          "reached_next_bucket_rate": 91.81818181818183,
+          "avg_price_change_pct": 20.17534657489183,
+          "avg_max_gain_pct": 24.676126813011564,
+          "avg_max_drawdown_pct": -18.12940976135207
+        }
+      }
+    },
+    "80-85%": {
+      "total_first_touches": 1001,
+      "final_yes": 1000,
+      "final_no": 1,
+      "final_yes_rate": 99.9000999000999,
+      "final_no_rate": 0.0999000999000999,
+      "time_windows": {
+        "15_minutes": {
+          "sample_size": 1001,
+          "strong_continuation_rate": 37.56243756243756,
+          "continuation_rate": 9.79020979020979,
+          "sideways_rate": 19.78021978021978,
+          "reversal_rate": 6.893106893106893,
+          "strong_reversal_rate": 25.97402597402597,
+          "reached_next_bucket_rate": 54.64535464535465,
+          "avg_price_change_pct": -0.7070077332605113,
+          "avg_max_gain_pct": 3.801861343287067,
+          "avg_max_drawdown_pct": -5.528456981576717
+        },
+        "30_minutes": {
+          "sample_size": 1001,
+          "strong_continuation_rate": 50.74925074925075,
+          "continuation_rate": 7.092907092907093,
+          "sideways_rate": 13.086913086913087,
+          "reversal_rate": 3.796203796203796,
+          "strong_reversal_rate": 25.274725274725274,
+          "reached_next_bucket_rate": 70.82917082917083,
+          "avg_price_change_pct": 2.0178733171623704,
+          "avg_max_gain_pct": 8.99238594145961,
+          "avg_max_drawdown_pct": -9.974365407775444
+        },
+        "60_minutes": {
+          "sample_size": 1001,
+          "strong_continuation_rate": 67.73226773226774,
+          "continuation_rate": 4.095904095904096,
+          "sideways_rate": 7.992007992007992,
+          "reversal_rate": 2.197802197802198,
+          "strong_reversal_rate": 17.982017982017982,
+          "reached_next_bucket_rate": 85.01498501498502,
+          "avg_price_change_pct": 8.148347844852005,
+          "avg_max_gain_pct": 14.578811785539644,
+          "avg_max_drawdown_pct": -13.952892739757855
+        },
+        "120_minutes": {
+          "sample_size": 1001,
+          "strong_continuation_rate": 85.11488511488511,
+          "continuation_rate": 0.6993006993006993,
+          "sideways_rate": 4.295704295704296,
+          "reversal_rate": 0.4995004995004995,
+          "strong_reversal_rate": 9.39060939060939,
+          "reached_next_bucket_rate": 93.9060939060939,
+          "avg_price_change_pct": 15.541463046289527,
+          "avg_max_gain_pct": 18.8606973916204,
+          "avg_max_drawdown_pct": -16.840308088638782
+        }
+      }
+    },
+    "85-90%": {
+      "total_first_touches": 1011,
+      "final_yes": 1010,
+      "final_no": 1,
+      "final_yes_rate": 99.90108803165182,
+      "final_no_rate": 0.09891196834817012,
+      "time_windows": {
+        "15_minutes": {
+          "sample_size": 1011,
+          "strong_continuation_rate": 37.88328387734916,
+          "continuation_rate": 11.275964391691394,
+          "sideways_rate": 22.551928783382788,
+          "reversal_rate": 7.51730959446093,
+          "strong_reversal_rate": 20.77151335311573,
+          "reached_next_bucket_rate": 54.00593471810089,
+          "avg_price_change_pct": -0.22744517517381746,
+          "avg_max_gain_pct": 3.5054772126551157,
+          "avg_max_drawdown_pct": -5.264535417093183
+        },
+        "30_minutes": {
+          "sample_size": 1011,
+          "strong_continuation_rate": 54.3026706231454,
+          "continuation_rate": 6.231454005934718,
+          "sideways_rate": 13.155291790306627,
+          "reversal_rate": 6.429277942631058,
+          "strong_reversal_rate": 19.881305637982198,
+          "reached_next_bucket_rate": 71.61226508407518,
+          "avg_price_change_pct": 1.7827044647019203,
+          "avg_max_gain_pct": 7.1492159216435445,
+          "avg_max_drawdown_pct": -8.96472158514168
+        },
+        "60_minutes": {
+          "sample_size": 1011,
+          "strong_continuation_rate": 71.31552917903066,
+          "continuation_rate": 3.066271018793274,
+          "sideways_rate": 6.824925816023739,
+          "reversal_rate": 1.9782393669634024,
+          "strong_reversal_rate": 16.81503461918892,
+          "reached_next_bucket_rate": 85.55885262116716,
+          "avg_price_change_pct": 5.073249344485454,
+          "avg_max_gain_pct": 10.722682754585984,
+          "avg_max_drawdown_pct": -12.602660254745125
+        },
+        "120_minutes": {
+          "sample_size": 1011,
+          "strong_continuation_rate": 87.04253214638972,
+          "continuation_rate": 0.5934718100890208,
+          "sideways_rate": 2.472799208704253,
+          "reversal_rate": 1.2858555885262115,
+          "strong_reversal_rate": 8.605341246290802,
+          "reached_next_bucket_rate": 95.0544015825915,
+          "avg_price_change_pct": 10.171815186337994,
+          "avg_max_gain_pct": 13.270290005247137,
+          "avg_max_drawdown_pct": -15.020539927002165
+        }
+      }
+    },
+    "90-95%": {
+      "total_first_touches": 1039,
+      "final_yes": 1038,
+      "final_no": 1,
+      "final_yes_rate": 99.90375360923966,
+      "final_no_rate": 0.0962463907603465,
+      "time_windows": {
+        "15_minutes": {
+          "sample_size": 1039,
+          "strong_continuation_rate": 33.108758421559195,
+          "continuation_rate": 19.73051010587103,
+          "sideways_rate": 23.676612127045235,
+          "reversal_rate": 7.025986525505294,
+          "strong_reversal_rate": 16.45813282001925,
+          "reached_next_bucket_rate": 54.186717998075075,
+          "avg_price_change_pct": -0.391341799707923,
+          "avg_max_gain_pct": 2.1870053595233627,
+          "avg_max_drawdown_pct": -4.388473418473355
+        },
+        "30_minutes": {
+          "sample_size": 1039,
+          "strong_continuation_rate": 53.897978825794034,
+          "continuation_rate": 11.838306063522618,
+          "sideways_rate": 13.185755534167468,
+          "reversal_rate": 4.619826756496631,
+          "strong_reversal_rate": 16.45813282001925,
+          "reached_next_bucket_rate": 72.76227141482194,
+          "avg_price_change_pct": 0.701528538339739,
+          "avg_max_gain_pct": 4.41647659689653,
+          "avg_max_drawdown_pct": -7.17846187774225
+        },
+        "60_minutes": {
+          "sample_size": 1039,
+          "strong_continuation_rate": 72.56977863330125,
+          "continuation_rate": 6.352261790182869,
+          "sideways_rate": 5.582290664100096,
+          "reversal_rate": 2.213666987487969,
+          "strong_reversal_rate": 13.282001924927817,
+          "reached_next_bucket_rate": 87.58421559191531,
+          "avg_price_change_pct": 2.2945020172656343,
+          "avg_max_gain_pct": 6.433964772826281,
+          "avg_max_drawdown_pct": -10.544572887933857
+        },
+        "120_minutes": {
+          "sample_size": 1039,
+          "strong_continuation_rate": 87.96920115495669,
+          "continuation_rate": 2.3099133782483157,
+          "sideways_rate": 2.8873917228103942,
+          "reversal_rate": 1.1549566891241578,
+          "strong_reversal_rate": 5.678537054860443,
+          "reached_next_bucket_rate": 95.18768046198267,
+          "avg_price_change_pct": 6.020852447737666,
+          "avg_max_gain_pct": 7.81031161122656,
+          "avg_max_drawdown_pct": -11.75058409106251
+        }
+      }
+    }
+  }
+}

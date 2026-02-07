@@ -218,6 +218,68 @@
             color: #666;
             font-size: 13px;
         }
+
+        .momentum-dashboard {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+
+        .momentum-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .momentum-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 15px;
+            transition: all 0.2s;
+        }
+
+        .momentum-card:hover {
+            border-color: #555;
+            background: #222;
+        }
+
+        .momentum-card-title {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .momentum-card-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #e0e0e0;
+            margin-bottom: 5px;
+        }
+
+        .momentum-card-change {
+            font-size: 12px;
+            font-family: 'SF Mono', 'Monaco', monospace;
+        }
+
+        .momentum-card-change.positive {
+            color: #0f0;
+        }
+
+        .momentum-card-change.negative {
+            color: #f00;
+        }
+
+        .momentum-card-subtitle {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -239,6 +301,11 @@
                 </div>
             </div>
         </header>
+
+        <div class="momentum-dashboard" id="momentumDashboard" style="display: none;">
+            <h2 style="font-size: 16px; color: #999; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;">Momentum Analysis</h2>
+            <div class="momentum-grid" id="momentumGrid"></div>
+        </div>
 
         <div class="controls">
             <div class="search-box">
@@ -273,6 +340,87 @@
         let allMatches = [];
         let currentFilter = 'all';
         let currentSort = { column: 'volume', direction: 'desc' };
+        let momentumData = null;
+
+        async function loadMomentumData() {
+            try {
+                const response = await fetch('tennis_momentum_analysis_v2.json');
+                momentumData = await response.json();
+                renderMomentumDashboard();
+            } catch (error) {
+                console.error('Error loading momentum data:', error);
+            }
+        }
+
+        function renderMomentumDashboard() {
+            if (!momentumData) return;
+
+            const dashboard = document.getElementById('momentumDashboard');
+            const grid = document.getElementById('momentumGrid');
+
+            // Show most interesting insights
+            const cards = [];
+
+            // Card 1: Best early entry point (50-55%)
+            const bucket5055 = momentumData.buckets['50-55%'];
+            if (bucket5055) {
+                const w60 = bucket5055.time_windows['60_minutes'];
+                cards.push({
+                    title: '50-55% Entry (60min)',
+                    value: `${w60.strong_continuation_rate.toFixed(1)}%`,
+                    change: `Avg: +${w60.avg_price_change_pct.toFixed(1)}%`,
+                    positive: true,
+                    subtitle: `${bucket5055.total_first_touches} samples`
+                });
+            }
+
+            // Card 2: Medium bucket (70-75%)
+            const bucket7075 = momentumData.buckets['70-75%'];
+            if (bucket7075) {
+                const w60 = bucket7075.time_windows['60_minutes'];
+                cards.push({
+                    title: '70-75% Entry (60min)',
+                    value: `${w60.strong_continuation_rate.toFixed(1)}%`,
+                    change: `Avg: +${w60.avg_price_change_pct.toFixed(1)}%`,
+                    positive: true,
+                    subtitle: `${bucket7075.total_first_touches} samples`
+                });
+            }
+
+            // Card 3: High confidence (85-90%)
+            const bucket8590 = momentumData.buckets['85-90%'];
+            if (bucket8590) {
+                const w60 = bucket8590.time_windows['60_minutes'];
+                cards.push({
+                    title: '85-90% Entry (60min)',
+                    value: `${w60.strong_continuation_rate.toFixed(1)}%`,
+                    change: `Avg: +${w60.avg_price_change_pct.toFixed(1)}%`,
+                    positive: true,
+                    subtitle: `${bucket8590.total_first_touches} samples`
+                });
+            }
+
+            // Card 4: Total samples analyzed
+            cards.push({
+                title: 'Total First Touches',
+                value: Object.values(momentumData.buckets).reduce((sum, b) => sum + b.total_first_touches, 0).toLocaleString(),
+                change: `${momentumData.dataset.total_markets} markets`,
+                positive: null,
+                subtitle: `${momentumData.dataset.total_price_points.toLocaleString()} data points`
+            });
+
+            // Render cards
+            grid.innerHTML = cards.map(card => `
+                <div class="momentum-card">
+                    <div class="momentum-card-title">${card.title}</div>
+                    <div class="momentum-card-value">${card.value}</div>
+                    <div class="momentum-card-change ${card.positive === true ? 'positive' : card.positive === false ? 'negative' : ''}">${card.change}</div>
+                    <div class="momentum-card-subtitle">${card.subtitle}</div>
+                </div>
+            `).join('');
+
+            dashboard.style.display = 'block';
+        }
 
         async function loadData() {
             try {
@@ -473,6 +621,7 @@
 
         // Initial load with return handling
         loadData().then(handleReturn);
+        loadMomentumData();
 
         // Auto-refresh every 10 seconds
         setInterval(loadData, 10000);
