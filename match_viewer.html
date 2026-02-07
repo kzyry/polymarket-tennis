@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Djokovic vs Fritz - Price History</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', monospace;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .meta {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 14px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+        }
+
+        th {
+            text-align: left;
+            padding: 10px 15px;
+            background: #2a2a2a;
+            color: #999;
+            font-weight: 500;
+            border-bottom: 1px solid #333;
+        }
+
+        td {
+            padding: 8px 15px;
+            border-bottom: 1px solid #252525;
+        }
+
+        tr:hover {
+            background: #222;
+        }
+
+        .price {
+            font-weight: 600;
+        }
+
+        .odds {
+            color: #888;
+        }
+
+        .change-positive {
+            color: #0f0;
+        }
+
+        .change-negative {
+            color: #f00;
+        }
+
+        .change-neutral {
+            color: #888;
+        }
+
+        .timestamp {
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="title">Loading...</h1>
+        <div class="meta" id="meta"></div>
+
+        <div class="section">
+            <h2>Pre-game (Hourly)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Price</th>
+                        <th>Odds</th>
+                        <th>Change</th>
+                    </tr>
+                </thead>
+                <tbody id="pregame"></tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>In-game (Every 10 min)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Price</th>
+                        <th>Odds</th>
+                        <th>Change</th>
+                    </tr>
+                </thead>
+                <tbody id="ingame"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function loadData() {
+            const response = await fetch('djokovic_fritz_detailed.json');
+            const data = await response.json();
+
+            // Update header
+            document.getElementById('title').textContent = data.match_info.title;
+            document.getElementById('meta').innerHTML = `
+                Volume: $${Number(data.match_info.volume).toLocaleString()} |
+                Game Start: ${new Date(data.match_info.game_start).toLocaleString()}
+            `;
+
+            // Render pre-game table
+            renderTable('pregame', data.pregame_hourly);
+
+            // Render in-game table
+            renderTable('ingame', data.ingame_10min);
+        }
+
+        function renderTable(elementId, history) {
+            const tbody = document.getElementById(elementId);
+            let prevPrice = null;
+
+            history.forEach(point => {
+                const price = point.p;
+                const odds = (1 / price).toFixed(2);
+                const timestamp = new Date(point.t * 1000);
+
+                let change = '';
+                let changeClass = 'change-neutral';
+
+                if (prevPrice !== null) {
+                    const diff = ((price - prevPrice) * 100).toFixed(1);
+                    if (diff > 0) {
+                        change = `+${diff}%`;
+                        changeClass = 'change-positive';
+                    } else if (diff < 0) {
+                        change = `${diff}%`;
+                        changeClass = 'change-negative';
+                    } else {
+                        change = '0%';
+                    }
+                }
+
+                const row = `
+                    <tr>
+                        <td class="timestamp">${timestamp.toLocaleString('ru-RU', {
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })}</td>
+                        <td class="price">${(price * 100).toFixed(1)}%</td>
+                        <td class="odds">${odds}</td>
+                        <td class="${changeClass}">${change}</td>
+                    </tr>
+                `;
+
+                tbody.innerHTML += row;
+                prevPrice = price;
+            });
+        }
+
+        loadData();
+    </script>
+</body>
+</html>

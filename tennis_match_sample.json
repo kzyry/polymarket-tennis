@@ -1,0 +1,271 @@
+{
+  "match_info": {
+    "id": "41151",
+    "ticker": "us-open-novak-djokovic-vs-taylor-fritz-2025-09-02",
+    "slug": "us-open-novak-djokovic-vs-taylor-fritz-2025-09-02",
+    "title": "US Open: Novak Djokovic vs Taylor Fritz",
+    "description": "This is a polymarket on the tennis match between Novak Djokovic and Taylor Fritz in the 2025 US Open men's singles quarter-final, scheduled for September 2, 2025.\n\nThis market will resolve to 'Djokovic' if Novak Djokovic advances against Taylor Fritz.\n\nThis market will resolve to 'Fritz' if Taylor Fritz advances against Novak Djokovic.\n\nIf the match is canceled (not played at all), ends in a tie, or is delayed beyond September 9, 2025, without a winner determined, this market will resolve to 50-50.\n\nIf the match ends in a walkover (one player withdraws before the start and the other advances automatically), this market will resolve in favor of the player who officially advances to the next round.\n\nThe primary resolution source will be official information from the US Open. A consensus of credible reporting may also be used.",
+    "resolutionSource": "",
+    "startDate": "2025-09-02T04:07:53.580763Z",
+    "creationDate": "2025-09-02T04:07:53.58076Z",
+    "endDate": "2025-09-10T00:10:00Z",
+    "image": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-open-winner-m-z6djFoYswx4c.jpg",
+    "icon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-open-winner-m-z6djFoYswx4c.jpg",
+    "active": true,
+    "closed": true,
+    "archived": false,
+    "new": false,
+    "featured": false,
+    "restricted": true,
+    "volume": 2287960.776371,
+    "openInterest": 0,
+    "createdAt": "2025-09-02T03:17:09.042398Z",
+    "updatedAt": "2025-09-04T09:02:16.416434Z",
+    "volume1wk": 2287960.776371001,
+    "volume1mo": 2287960.776371001,
+    "volume1yr": 2287960.776371001,
+    "enableOrderBook": true,
+    "negRisk": false,
+    "commentCount": 29,
+    "markets": [
+      {
+        "id": "585677",
+        "question": "US Open: Novak Djokovic vs Taylor Fritz",
+        "conditionId": "0x87417d2ca17e27f78399795bbe181ed2298ef218a0b3506e971fe24a4b821b17",
+        "slug": "us-open-novak-djokovic-vs-taylor-fritz-2025-09-02",
+        "resolutionSource": "",
+        "endDate": "2025-09-10T00:10:00Z",
+        "startDate": "2025-09-02T03:56:16.95707Z",
+        "image": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-open-winner-m-z6djFoYswx4c.jpg",
+        "icon": "https://polymarket-upload.s3.us-east-2.amazonaws.com/us-open-winner-m-z6djFoYswx4c.jpg",
+        "description": "This is a polymarket on the tennis match between Novak Djokovic and Taylor Fritz in the 2025 US Open men's singles quarter-final, scheduled for September 2, 2025.\n\nThis market will resolve to 'Djokovic' if Novak Djokovic advances against Taylor Fritz.\n\nThis market will resolve to 'Fritz' if Taylor Fritz advances against Novak Djokovic.\n\nIf the match is canceled (not played at all), ends in a tie, or is delayed beyond September 9, 2025, without a winner determined, this market will resolve to 50-50.\n\nIf the match ends in a walkover (one player withdraws before the start and the other advances automatically), this market will resolve in favor of the player who officially advances to the next round.\n\nThe primary resolution source will be official information from the US Open. A consensus of credible reporting may also be used.",
+        "outcomes": "[\"Djokovic\", \"Fritz\"]",
+        "outcomePrices": "[\"1\", \"0\"]",
+        "volume": "2287960.776371",
+        "active": true,
+        "closed": true,
+        "marketMakerAddress": "0xa467Fa1281D7c0d58AC6D654B82e60aDae0b3554",
+        "createdAt": "2025-09-02T03:17:09.997832Z",
+        "updatedAt": "2025-09-04T09:00:36.520958Z",
+        "closedTime": "2025-09-03 05:45:04+00",
+        "new": false,
+        "featured": false,
+        "submitted_by": "0x91430CaD2d3975766499717fA0D66A78D814E5c5",
+        "archived": false,
+        "resolvedBy": "0x157Ce2d672854c848c9b79C49a8Cc6cc89176a49",
+        "restricted": true,
+        "groupItemThreshold": "0",
+        "questionID": "0xca9e4da629af217965dd496696b7b4037e69609c479f25457c3c419e93db61a2",
+        "umaEndDate": "2025-09-03T05:45:04Z",
+        "enableOrderBook": true,
+        "orderPriceMinTickSize": 0.001,
+        "orderMinSize": 5,
+        "umaResolutionStatus": "resolved",
+        "volumeNum": 2287960.776371,
+        "endDateIso": "2025-09-10",
+        "startDateIso": "2025-09-02",
+        "hasReviewedDates": true,
+        "volume1wk": 2287960.776371001,
+        "volume1mo": 2287960.776371001,
+        "volume1yr": 2287960.776371001,
+        "gameStartTime": "2025-09-03 00:30:00+00",
+        "secondsDelay": 3,
+        "clobTokenIds": "[\"41186257968923391055830208948371423297417980513128185978306248480330191593028\", \"7129101575263981240391287030174062817212974100938585019392018493208313306082\"]",
+        "umaBond": "500",
+        "umaReward": "5",
+        "volume1wkClob": 2287960.776371001,
+        "volume1moClob": 2287960.776371001,
+        "volume1yrClob": 2287960.776371001,
+        "volumeClob": 2287960.776371,
+        "customLiveness": 0,
+        "acceptingOrders": false,
+        "negRisk": false,
+        "negRiskRequestID": "",
+        "ready": false,
+        "funded": false,
+        "acceptingOrdersTimestamp": "2025-09-02T03:55:55Z",
+        "cyom": false,
+        "pagerDutyNotificationEnabled": false,
+        "approved": true,
+        "rewardsMinSize": 0,
+        "rewardsMaxSpread": 0,
+        "spread": 0.001,
+        "automaticallyResolved": true,
+        "oneHourPriceChange": 0.14,
+        "lastTradePrice": 1,
+        "bestBid": 0.999,
+        "bestAsk": 1,
+        "automaticallyActive": true,
+        "clearBookOnStart": true,
+        "manualActivation": false,
+        "negRiskOther": false,
+        "umaResolutionStatuses": "[\"proposed\"]",
+        "pendingDeployment": false,
+        "deploying": false,
+        "deployingTimestamp": "2025-09-02T03:55:27.355372Z",
+        "rfqEnabled": false,
+        "holdingRewardsEnabled": false,
+        "feesEnabled": false,
+        "requiresTranslation": false
+      }
+    ],
+    "tags": [
+      {
+        "id": "100639",
+        "label": "Games",
+        "slug": "games",
+        "forceShow": false,
+        "createdAt": "2024-09-23T22:41:37.670714Z",
+        "updatedAt": "2026-01-24T21:12:34.613852Z",
+        "requiresTranslation": false
+      },
+      {
+        "id": "100408",
+        "label": "US Open",
+        "slug": "us-open",
+        "forceShow": false,
+        "createdAt": "2024-09-03T14:57:12.592923Z",
+        "updatedAt": "2026-01-24T21:36:48.990066Z",
+        "requiresTranslation": false
+      },
+      {
+        "id": "1",
+        "label": "Sports",
+        "slug": "sports",
+        "forceShow": false,
+        "publishedAt": "2023-10-24 22:37:50.296+00",
+        "updatedBy": 15,
+        "createdAt": "2023-10-24T22:37:50.31Z",
+        "updatedAt": "2026-01-24T21:02:13.879993Z",
+        "forceHide": true,
+        "requiresTranslation": false
+      },
+      {
+        "id": "864",
+        "label": "Tennis",
+        "slug": "tennis",
+        "forceShow": false,
+        "publishedAt": "2024-01-12 19:45:09.662+00",
+        "createdAt": "2024-01-12T19:45:09.677Z",
+        "updatedAt": "2026-01-24T21:06:37.45169Z",
+        "requiresTranslation": false
+      }
+    ],
+    "cyom": false,
+    "closedTime": "2025-09-03T05:45:04Z",
+    "showAllOutcomes": true,
+    "showMarketImages": true,
+    "automaticallyResolved": true,
+    "enableNegRisk": false,
+    "automaticallyActive": true,
+    "eventDate": "2025-09-02",
+    "startTime": "2025-09-03T00:30:00Z",
+    "negRiskAugmented": false,
+    "featuredOrder": 10,
+    "pendingDeployment": false,
+    "deploying": false,
+    "requiresTranslation": false
+  },
+  "price_history": [
+    {
+      "t": 1756789218,
+      "p": 0.605
+    },
+    {
+      "t": 1756792818,
+      "p": 0.595
+    },
+    {
+      "t": 1756796421,
+      "p": 0.595
+    },
+    {
+      "t": 1756800014,
+      "p": 0.595
+    },
+    {
+      "t": 1756803625,
+      "p": 0.595
+    },
+    {
+      "t": 1756807209,
+      "p": 0.605
+    },
+    {
+      "t": 1756810816,
+      "p": 0.605
+    },
+    {
+      "t": 1756814419,
+      "p": 0.61
+    },
+    {
+      "t": 1756818014,
+      "p": 0.615
+    },
+    {
+      "t": 1756821603,
+      "p": 0.615
+    },
+    {
+      "t": 1756825224,
+      "p": 0.625
+    },
+    {
+      "t": 1756828817,
+      "p": 0.625
+    },
+    {
+      "t": 1756832414,
+      "p": 0.625
+    },
+    {
+      "t": 1756836016,
+      "p": 0.63
+    },
+    {
+      "t": 1756839608,
+      "p": 0.635
+    },
+    {
+      "t": 1756843211,
+      "p": 0.635
+    },
+    {
+      "t": 1756846802,
+      "p": 0.655
+    },
+    {
+      "t": 1756850408,
+      "p": 0.655
+    },
+    {
+      "t": 1756854012,
+      "p": 0.655
+    },
+    {
+      "t": 1756857607,
+      "p": 0.66
+    },
+    {
+      "t": 1756861205,
+      "p": 0.725
+    },
+    {
+      "t": 1756864811,
+      "p": 0.895
+    },
+    {
+      "t": 1756868413,
+      "p": 0.675
+    },
+    {
+      "t": 1756872021,
+      "p": 0.995
+    },
+    {
+      "t": 1756875603,
+      "p": 0.9995
+    }
+  ]
+}

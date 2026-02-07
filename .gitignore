@@ -1,0 +1,35 @@
+# Database
+*.db
+polymarket_history/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+
+# Logs
+*.log
+price_fetch.log
+
+# Large data files
+events_2025_all.json
+events_2025_single_market.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Credentials
+.env
+credentials.json
