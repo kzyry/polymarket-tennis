@@ -280,6 +280,99 @@
             color: #666;
             margin-top: 4px;
         }
+
+        .momentum-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .momentum-popup.active {
+            display: flex;
+        }
+
+        .momentum-popup-content {
+            background: #2a2a2a;
+            border: 1px solid #555;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 30px;
+            position: relative;
+        }
+
+        .momentum-popup-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px 10px;
+            line-height: 1;
+        }
+
+        .momentum-popup-close:hover {
+            color: #fff;
+        }
+
+        .momentum-popup-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .momentum-popup-section {
+            margin-bottom: 20px;
+        }
+
+        .momentum-popup-section h3 {
+            font-size: 14px;
+            color: #0066cc;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .momentum-popup-section p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .momentum-popup-section code {
+            background: #1a1a1a;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', 'Monaco', monospace;
+            color: #0f0;
+        }
+
+        .momentum-popup-example {
+            background: #1a1a1a;
+            border-left: 3px solid #0066cc;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .momentum-card {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -336,6 +429,13 @@
         </div>
     </div>
 
+    <div class="momentum-popup" id="momentumPopup">
+        <div class="momentum-popup-content">
+            <button class="momentum-popup-close" onclick="closeMomentumPopup()">&times;</button>
+            <div id="momentumPopupBody"></div>
+        </div>
+    </div>
+
     <script>
         let allMatches = [];
         let currentFilter = 'all';
@@ -370,7 +470,9 @@
                     value: `${w60.strong_continuation_rate.toFixed(1)}%`,
                     change: `Avg: +${w60.avg_price_change_pct.toFixed(1)}%`,
                     positive: true,
-                    subtitle: `${bucket5055.total_first_touches} samples`
+                    subtitle: `${bucket5055.total_first_touches} samples`,
+                    bucketData: bucket5055,
+                    bucketName: '50-55%'
                 });
             }
 
@@ -383,7 +485,9 @@
                     value: `${w60.strong_continuation_rate.toFixed(1)}%`,
                     change: `Avg: +${w60.avg_price_change_pct.toFixed(1)}%`,
                     positive: true,
-                    subtitle: `${bucket7075.total_first_touches} samples`
+                    subtitle: `${bucket7075.total_first_touches} samples`,
+                    bucketData: bucket7075,
+                    bucketName: '70-75%'
                 });
             }
 
@@ -396,7 +500,9 @@
                     value: `${w60.strong_continuation_rate.toFixed(1)}%`,
                     change: `Avg: +${w60.avg_price_change_pct.toFixed(1)}%`,
                     positive: true,
-                    subtitle: `${bucket8590.total_first_touches} samples`
+                    subtitle: `${bucket8590.total_first_touches} samples`,
+                    bucketData: bucket8590,
+                    bucketName: '85-90%'
                 });
             }
 
@@ -406,12 +512,13 @@
                 value: Object.values(momentumData.buckets).reduce((sum, b) => sum + b.total_first_touches, 0).toLocaleString(),
                 change: `${momentumData.dataset.total_markets} markets`,
                 positive: null,
-                subtitle: `${momentumData.dataset.total_price_points.toLocaleString()} data points`
+                subtitle: `${momentumData.dataset.total_price_points.toLocaleString()} data points`,
+                isSummary: true
             });
 
             // Render cards
-            grid.innerHTML = cards.map(card => `
-                <div class="momentum-card">
+            grid.innerHTML = cards.map((card, index) => `
+                <div class="momentum-card" onclick="showMomentumPopup(${index})">
                     <div class="momentum-card-title">${card.title}</div>
                     <div class="momentum-card-value">${card.value}</div>
                     <div class="momentum-card-change ${card.positive === true ? 'positive' : card.positive === false ? 'negative' : ''}">${card.change}</div>
@@ -419,8 +526,121 @@
                 </div>
             `).join('');
 
+            // Store cards data for popup
+            window.momentumCards = cards;
+
             dashboard.style.display = 'block';
         }
+
+        function showMomentumPopup(cardIndex) {
+            const card = window.momentumCards[cardIndex];
+            const popup = document.getElementById('momentumPopup');
+            const body = document.getElementById('momentumPopupBody');
+
+            if (card.isSummary) {
+                // Summary card
+                body.innerHTML = `
+                    <div class="momentum-popup-title">${card.title}</div>
+
+                    <div class="momentum-popup-section">
+                        <h3>Что это означает?</h3>
+                        <p>Это общая статистика по всем проанализированным данным.</p>
+                    </div>
+
+                    <div class="momentum-popup-section">
+                        <h3>Размер выборки</h3>
+                        <p><code>${card.value}</code> = Общее количество "первых касаний" всех ценовых диапазонов</p>
+                        <p>Это моменты, когда цена впервые входила в каждый диапазон (50-55%, 55-60%, и т.д.)</p>
+                    </div>
+
+                    <div class="momentum-popup-section">
+                        <h3>Данные анализа</h3>
+                        <p><code>${card.change}</code> = Проанализировано маркетов</p>
+                        <p><code>${card.subtitle}</code> = Всего точек данных о ценах</p>
+                    </div>
+
+                    <div class="momentum-popup-section">
+                        <h3>Методология</h3>
+                        <p>Анализ использует подход "First Touch + Time Windows":</p>
+                        <ul style="margin-left: 20px; color: #ccc;">
+                            <li>Отслеживаем только первое попадание цены в каждый диапазон</li>
+                            <li>Измеряем движение цены в окнах 15, 30, 60 и 120 минут</li>
+                            <li>Избегаем look-ahead bias (не используем будущие данные)</li>
+                        </ul>
+                    </div>
+                `;
+            } else {
+                // Bucket card
+                const w60 = card.bucketData.time_windows['60_minutes'];
+                const bucketRange = card.bucketName.split('-');
+                const midPrice = (parseFloat(bucketRange[0]) + parseFloat(bucketRange[1])) / 2;
+                const avgFinalPrice = midPrice * (1 + w60.avg_price_change_pct / 100);
+                const exampleEntry = midPrice;
+                const exampleFinal = exampleEntry * (1 + w60.avg_price_change_pct / 100);
+
+                body.innerHTML = `
+                    <div class="momentum-popup-title">${card.title}</div>
+
+                    <div class="momentum-popup-section">
+                        <h3>Что это означает?</h3>
+                        <p>Анализ входа в ценовой диапазон <code>${card.bucketName}</code></p>
+                        <p>Мы смотрим на ситуацию, когда цена (вероятность победы игрока) <strong>впервые</strong> достигает этого диапазона.</p>
+                    </div>
+
+                    <div class="momentum-popup-section">
+                        <h3>Strong Continuation Rate: ${w60.strong_continuation_rate.toFixed(1)}%</h3>
+                        <p>В <code>${w60.strong_continuation_rate.toFixed(1)}%</code> случаев цена <strong>выросла на 5% и более</strong> в течение следующих 60 минут.</p>
+                        <div class="momentum-popup-example">
+                            Пример: если цена была ${exampleEntry.toFixed(1)}%, через час она стала ≥${(exampleEntry * 1.05).toFixed(1)}%
+                        </div>
+                    </div>
+
+                    <div class="momentum-popup-section">
+                        <h3>Средний рост: +${w60.avg_price_change_pct.toFixed(1)}%</h3>
+                        <p>В среднем, цена выросла на <code>${w60.avg_price_change_pct.toFixed(1)}%</code> от начального значения за 60 минут.</p>
+                        <div class="momentum-popup-example">
+                            Пример: если вход был на ${exampleEntry.toFixed(1)}%, средняя цена через час = ${exampleEntry.toFixed(1)}% × ${(1 + w60.avg_price_change_pct / 100).toFixed(3)} = <strong>${exampleFinal.toFixed(1)}%</strong>
+                        </div>
+                    </div>
+
+                    <div class="momentum-popup-section">
+                        <h3>Размер выборки: ${card.bucketData.total_first_touches} samples</h3>
+                        <p>Это произошло <code>${card.bucketData.total_first_touches}</code> раз во всех проанализированных матчах.</p>
+                        <p style="color: #0f0;">Большая выборка = статистически значимый результат</p>
+                    </div>
+
+                    <div class="momentum-popup-section">
+                        <h3>Практический смысл</h3>
+                        <p>Когда цена игрока впервые достигает ${card.bucketName} (${bucketRange[0]}%-${bucketRange[1]}%), с высокой вероятностью (<code>${w60.strong_continuation_rate.toFixed(1)}%</code>) эта цена продолжит расти в течение следующего часа, в среднем до <strong>~${avgFinalPrice.toFixed(1)}%</strong>.</p>
+                        <p style="color: #0066cc; margin-top: 10px;">Это указывает на сильный <strong>momentum эффект</strong> - рынок склонен продолжать движение в том же направлении после достижения этого уровня.</p>
+                    </div>
+
+                    <div class="momentum-popup-section">
+                        <h3>Дополнительные метрики (60 минут)</h3>
+                        <ul style="margin-left: 20px; color: #ccc; line-height: 1.8;">
+                            <li>Continuation (2-5% рост): ${w60.continuation_rate.toFixed(1)}%</li>
+                            <li>Sideways (±2%): ${w60.sideways_rate.toFixed(1)}%</li>
+                            <li>Reversal (2-5% падение): ${w60.reversal_rate.toFixed(1)}%</li>
+                            <li>Strong Reversal (5%+ падение): ${w60.strong_reversal_rate.toFixed(1)}%</li>
+                            <li>Достигли следующего диапазона: ${w60.reached_next_bucket_rate.toFixed(1)}%</li>
+                        </ul>
+                    </div>
+                `;
+            }
+
+            popup.classList.add('active');
+        }
+
+        function closeMomentumPopup() {
+            document.getElementById('momentumPopup').classList.remove('active');
+        }
+
+        // Close popup on background click
+        document.getElementById('momentumPopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeMomentumPopup();
+            }
+        });
 
         async function loadData() {
             try {
